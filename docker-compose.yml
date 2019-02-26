@@ -1,7 +1,8 @@
 version: '2.2'
+
 services:
   mongo:
-    image: mongo:3.4
+    image: mongo:4.0
     networks:
       - unifi
     restart: always
@@ -29,6 +30,7 @@ services:
       - "8443:8443"
       - "3478:3478/udp"
       - "10001:10001/udp"
+
   logs:
     image: bash
     depends_on:
