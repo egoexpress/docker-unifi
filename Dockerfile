@@ -1,10 +1,10 @@
-FROM ubuntu:xenial
+FROM ubuntu:bionic
 
 LABEL maintainer="Jacob Alberty <jacob.alberty@foundigital.com>"
 
 ARG DEBIAN_FRONTEND=noninteractive
 
-ENV PKGURL=https://dl.ubnt.com/unifi/5.8.28/unifi_sysvinit_all.deb
+ENV PKGURL=https://dl.ubnt.com/unifi/5.10.23/unifi_sysvinit_all.deb
 
 ENV BASEDIR=/usr/lib/unifi \
     DATADIR=/unifi/data \
@@ -28,6 +28,7 @@ ENV BASEDIR=/usr/lib/unifi \
 # but for now while shoehorning gosu in it is seperate
 RUN set -ex \
     && fetchDeps=' \
+        gnupg2 \
         ca-certificates \
         wget \
     ' \

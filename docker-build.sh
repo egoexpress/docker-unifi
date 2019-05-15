@@ -32,6 +32,7 @@ fi
 apt-get update
 apt-get install -qy --no-install-recommends \
     apt-transport-https \
+    gnupg2 \
     curl \
     openjdk-8-jre-headless \
     procps \

@@ -9,7 +9,7 @@ services:
     volumes:
       - db:/data/db
   controller:
-    image: "jacobalberty/unifi:${TAG:-latest}"
+    image: "egoexpress/unifi:${TAG:-latest}"
     depends_on:
       - mongo
     init: true
