@@ -4,14 +4,16 @@
 
 It is suggested you start running this as a non root user. The default right now is to run as root but if you set the environment variable RUNAS_UID0 to false then the image will run as a special unfi user with the uid/gid 999/999. You should ideally set your data and logs to owned by the proper gid. The [environment variables section](https://github.com/jacobalberty/unifi-docker/blob/master/README.md#environment-variables) has more details. At some point in the future this feature may default to on and I personally run all of my own containers with it on. So turning it on for your own containers will help prevent any surprises.
 
+## Mongo and Docker for windows
+ Unifi uses mongo store its data. Mongo uses the fsync() system call on its data files. Because of how docker for windows works you can't bind mount `/unifi/db/data` on a docker for windows container. Therefore `-v ~/unifi:/unifi` won't work.
+ [Discussion on the issue](https://github.com/docker/for-win/issues/138).
+
 ## Supported Docker Hub Tags and Respective `Dockerfile` Links
 
 | Tag | Description |
 |-----|-------------|
-| [`latest`, `stable`, `5.8`](https://github.com/jacobalberty/unifi-docker/blob/master/Dockerfile) | Tracks UniFi stable version - 5.8.28 as of 2018-08-08 |
-| [`5.7`](https://github.com/jacobalberty/unifi-docker/blob/master/Dockerfile) | Tracks UniFi 5.7 version - 5.7.23 as of 2018-04-16 |
-| [`lts`, `5.6`](https://github.com/jacobalberty/unifi-docker/blob/lts/Dockerfile) | Tracks UniFi LTS stable version - 5.6.39 as of 2018-06-25 |
-| [`oldstable`, `5.5`](https://github.com/jacobalberty/unifi-docker/blob/oldstable/Dockerfile) | Tracks UniFi Old Stable version - 5.5.24 as of 2017-11-13 |
+| [`latest`, `stable`, `5.10`](https://github.com/jacobalberty/unifi-docker/blob/master/Dockerfile) | Tracks UniFi stable version - 5.10.23 as of 2019-05-03 |
+| [`lts`, `5.6`](https://github.com/jacobalberty/unifi-docker/blob/lts/Dockerfile) | Tracks UniFi LTS stable version - 5.6.40 as of 2018-09-10 |
 | [`sc`](https://github.com/jacobalberty/unifi-docker/blob/sc/Dockerfile) | Tracks UniFi "Stable Candidate", The latest stable candidate may flip between the two branches maintained by Ubuiqiti so it is advised you tag off of the version you want directly instead of the `sc` tag. |
 
 ### Latest Stable Candidate tags
@@ -19,12 +21,11 @@ It is suggested you start running this as a non root user. The default right now
 | Version | Latest Tag |
 |---------|------------|
 | 5.6.x   | [`5.6.39-sc`](https://github.com/jacobalberty/unifi-docker/blob/5.6.39-sc/Dockerfile) |
-| 5.7.x   | [`5.7.28-sc`](https://github.com/jacobalberty/unifi-docker/blob/5.7.28-sc/Dockerfile) |
-| 5.8.x   | [`5.8.28-sc`](https://github.com/jacobalberty/unifi-docker/blob/5.8.28-sc/Dockerfile) |
+| 5.10.x   | [`5.10.24-sc`](https://github.com/jacobalberty/unifi-docker/blob/5.10.24-sc/Dockerfile) |
 
 These tags generally track the UniFi APT repository. We do lead the repository a little when it comes to pushing the latest version. The latest version gets pushed when it moves from `stable candidate` to `stable` instead of waiting for it to hit the repository.
 
-In adition to these tags you may tag specific versions as well, for example `jacobalberty/unifi:5.4.19` will get you unifi 5.4.19 no matter what the current version is. Stable candidates now exist both under the `sc` tag and for tags with the extension `-sc` ie `jacobalberty/unifi:5.6.18-sc`. It is advised to use the specific versions as the `sc` tag may jump from 5.6.x to 5.5.x then back to 5.6.x as new stable candidates come out.
+In adition to these tags you may tag specific versions as well, for example `jacobalberty/unifi:5.6.40` will get you unifi 5.6.40 no matter what the current version is. Stable candidates now exist both under the `sc` tag and for tags with the extension `-sc` ie `jacobalberty/unifi:5.6.18-sc`. It is advised to use the specific versions as the `sc` tag may jump from 5.6.x to 5.8.x then back to 5.6.x as new stable candidates come out.
 
 ## Description
 
@@ -44,6 +45,8 @@ mkdir -p unifi/log
 docker run --rm --init -p 8080:8080 -p 8443:8443 -p 3478:3478/udp -p 10001:10001/udp -e TZ='Africa/Johannesburg' -v ~/unifi:/unifi --name unifi jacobalberty/unifi:stable
 ```
 
+**Note** you must omit `-v ~/unifi:/unifi` on windows, but you can use a local volume e.g. `-v unifi:/unifi` (omit the leading ~/) to persist the data on a local volume.
+
 ## Running with separate mongo container
 
 A compose file has been included that will bring up mongo and the controller,
@@ -59,6 +62,10 @@ docker-compose up -d
 ### Layer 3 Adoption
 
 The default example requires some l3 adoption method. You have a couple options to adopt.
+
+#### Force adoption IP
+
+Run UniFi Docker and open UniFi in browser. Go under Settings -> Controller and then enter the IP address of the Docker host machine in "Controller Hostname/IP", and check the "Override inform host with controller hostname/IP". Save settings and restart UniFi Docker container. 
 
 #### SSH Adoption
 
@@ -109,7 +116,7 @@ Under your containers service definition instead of using `image: jacobalberty/u
 ```shell
         image: jacobalberty/unifi:beta
          environment:
-          PKGURL: https://dl.ubnt.com/unifi/5.5.24/unifi_sysvinit_all.deb
+          PKGURL: https://dl.ubnt.com/unifi/5.6.40/unifi_sysvinit_all.deb
 ```
 
 Once again, simply change PKGURL to point to the package you would like to use.

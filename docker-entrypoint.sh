@@ -37,7 +37,7 @@ DATALINK=${BASEDIR}/data
 LOGLINK=${BASEDIR}/logs
 RUNLINK=${BASEDIR}/run
 
-DIRS="${RUNDIR} ${LOGDIR} ${DATADIR}"
+DIRS="${RUNDIR} ${LOGDIR} ${DATADIR} ${BASEDIR}"
 
 JVM_MAX_HEAP_SIZE=${JVM_MAX_HEAP_SIZE:-1024M}
 #JVM_INIT_HEAP_SIZE=
@@ -177,7 +177,7 @@ if [[ "${@}" == "unifi" ]]; then
         gosu unifi:unifi ${UNIFI_CMD} &
     fi
     wait
-    log "WARN: unifi service process ended without being singaled? Check for errors in ${LOGDIR}." >&2
+    log "WARN: unifi service process ended without being signaled? Check for errors in ${LOGDIR}." >&2
 else
     log "Executing: ${@}"
     exec ${@}
