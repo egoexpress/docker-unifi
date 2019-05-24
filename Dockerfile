@@ -1,6 +1,6 @@
 FROM ubuntu:bionic
 
-LABEL maintainer="Jacob Alberty <jacob.alberty@foundigital.com>"
+LABEL maintainer="Bjoern Stierand <bjoern-github@innovention.de>"
 
 ARG DEBIAN_FRONTEND=noninteractive
 
