@@ -4,7 +4,7 @@ LABEL maintainer="Bjoern Stierand <bjoern-github@innovention.de>"
 
 ARG DEBIAN_FRONTEND=noninteractive
 
-ENV PKGURL=https://dl.ubnt.com/unifi/5.10.23/unifi_sysvinit_all.deb
+ENV PKGURL=https://dl.ubnt.com/unifi/5.10.24/unifi_sysvinit_all.deb
 
 ENV BASEDIR=/usr/lib/unifi \
     DATADIR=/unifi/data \
